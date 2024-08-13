@@ -1,19 +1,13 @@
-name: Continuous_Integration
+name: Deploy Application with Github Actions
 
-on: pull_request
+on: 
+    push:
+        branches: [main]
 
 jobs:
-  continuous-integration:
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v3
-      - name: Using Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: 16.
-      - name: run install, build and test 
-        run: |
-          npm install
-          npm run build
-          npm run test 
+    build:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v3
+              
