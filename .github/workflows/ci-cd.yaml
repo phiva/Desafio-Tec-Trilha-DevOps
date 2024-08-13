@@ -31,7 +31,7 @@ jobs:
  deploy:
     machine:
       image: ubuntu-2004:current
-    resource_class: medium
+    resource_class: medium 
     steps:
       - run:
           name: Deploy API to Render
