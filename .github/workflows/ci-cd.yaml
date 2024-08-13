@@ -1,59 +1,19 @@
-name: CI/CD
+name: Continuous_Integration
 
-
-version: 2.1
-orbs:
-  node: actions/checkout@v2
+on: pull_request
 
 jobs:
-  build_and_test:
-    executor:
-      name: node/default
-      tag: '18.16'
-    steps:
-      - checkout             
-      - run: node --version
-      - node/install-packages:
-          pkg-manager: npm
-      - run:
-          command: npm run test:unit
-          name: Run unit tests
-      - run:
-          command: npm run build
-          name: Build server
-      - run:
-          command: npm run start
-          name: Start server
-          background: true
-      - run:
-          command: sleep 5 && curl -I localhost:5000
-          name: Verify server is running
- deploy:
-    machine:
-      image: ubuntu-2004:current
-    resource_class: medium 
-    steps:
-      - run:
-          name: Deploy API to Render
-          command: |
-            response=$(curl -s -w "%{http_code}" -o response.txt $DEPLOY_URI)
-            response_code=${response:(-3)}
-            if [ $response_code -eq 200 ]; then
-              echo "Deployment successful!"
-              cat response.txt  # Print the response body
-            else
-              echo "Deployment failed with response code: $response_code"
-              cat response.txt  # Print the response body
-              exit 1
-            fi
+  continuous-integration:
+    runs-on: ubuntu-latest
 
-workflows:
-  build_and_test_app:
-    jobs:
-      - build_and_test
-      - deploy:
-          requires:
-           - build_and_test
-          filters:
-            branches:
-                only: master
+    steps:
+      - uses: actions/checkout@v3
+      - name: Using Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16.
+      - name: run install, build and test 
+        run: |
+          npm install
+          npm run build
+          npm run test 
