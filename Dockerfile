@@ -1,4 +1,4 @@
-FROM node:18
+FROM node:18.16
 
 WORKDIR /usr/src/app
 
@@ -12,4 +12,4 @@ RUN npm run build
 
 EXPOSE 5000
 
-CMD [ "node", "./dist/src/index.js" ]
+CMD [ "node", "./dist/src/app.js" ]
